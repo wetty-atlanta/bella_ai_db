@@ -1,0 +1,131 @@
+!DOCTYPE html
+html lang=ja
+head
+    meta charset=UTF-8
+    meta name=viewport content=width=device-width, initial-scale=1.0
+    title漫画『Bella』Q&Aアプリtitle
+    style
+        body {
+            font-family sans-serif;
+            line-height 1.6;
+            margin 20px;
+            background-color #f4f4f4;
+            color #333;
+        }
+        .container {
+            max-width 800px;
+            margin auto;
+            background #fff;
+            padding 20px;
+            border-radius 8px;
+            box-shadow 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color #d63384;
+            text-align center;
+        }
+        textarea {
+            width 98%;
+            padding 10px;
+            border-radius 4px;
+            border 1px solid #ddd;
+            font-size 16px;
+            margin-bottom 10px;
+        }
+        .controls {
+            display flex;
+            justify-content space-between;
+            align-items center;
+            margin-bottom 20px;
+        }
+        button {
+            background-color #d63384;
+            color white;
+            padding 10px 20px;
+            border none;
+            border-radius 5px;
+            cursor pointer;
+            font-size 16px;
+        }
+        buttonhover {
+            background-color #b02a6c;
+        }
+        buttondisabled {
+            background-color #ccc;
+            cursor not-allowed;
+        }
+        .answer-box {
+            margin-top 20px;
+            background-color #f9f9f9;
+            border 1px solid #ddd;
+            padding 15px;
+            border-radius 5px;
+            white-space pre-wrap;  改行を反映させる 
+        }
+    style
+head
+body
+
+    div class=container
+        h1漫画『Bella』Q&Ah1
+        
+        textarea id=question rows=4 placeholder=『Bella』について質問してください...textarea
+
+        div class=controls
+            div
+                input type=radio id=spoiler-free name=mode value=spoiler-free checked
+                label for=spoiler-freeネタバレ無しlabel
+                input type=radio id=spoiler-ok name=mode value=spoiler-ok
+                label for=spoiler-okネタバレ有りlabel
+            div
+            button id=askButton onclick=askQuestion()質問するbutton
+        div
+
+        h2回答h2
+        div id=answer class=answer-boxここに回答が表示されます。div
+    div
+
+    script
+        async function askQuestion() {
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value;
+            const mode = document.querySelector('input[name=mode]checked').value;
+            const answerElement = document.getElementById('answer');
+            const askButton = document.getElementById('askButton');
+
+            if (!question.trim()) {
+                alert('質問を入力してください。');
+                return;
+            }
+
+             ボタンを無効化し、回答を待機中にする
+            askButton.disabled = true;
+            answerElement.textContent = '考え中です...';
+
+            try {
+                const response = await fetch('ask', {
+                    method 'POST',
+                    headers {
+                        'Content-Type' 'applicationjson',
+                    },
+                    body JSON.stringify({ question, mode }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    answerElement.textContent = data.answer;
+                } else {
+                    answerElement.textContent = 'エラーが発生しました ' + data.error;
+                }
+            } catch (error) {
+                answerElement.textContent = 'サーバーとの通信に失敗しました。';
+            } finally {
+                 ボタンを再度有効化
+                askButton.disabled = false;
+            }
+        }
+    script
+
+body
+html
