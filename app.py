@@ -18,7 +18,7 @@ if not os.path.exists(db_directory):
 
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
 db = Chroma(persist_directory=db_directory, embedding_function=embeddings)
-retriever = db.as_retriever(search_kwargs={"k": 5}) # 関連性の高いチャンクを5つ検索
+retriever = db.as_retriever(search_kwargs={"k": 3}) # 関連性の高いチャンクを5つ検索
 
 # --- AIモデルとプロンプトの設定 ---
 llm = ChatGoogleGenerativeAI(model="gemini-1.0-pro", google_api_key=api_key, temperature=0.7)
