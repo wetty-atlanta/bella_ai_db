@@ -4,4 +4,3 @@ langchain
 langchain-google-genai
 chromadb
 tiktoken
-langchain-comm
